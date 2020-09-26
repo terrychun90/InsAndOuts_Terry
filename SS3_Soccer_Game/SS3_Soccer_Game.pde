@@ -31,6 +31,8 @@ int goaltextSize = 75;
 int pressenterSize = 40;
 float powerbarHeight = 0;
 float targetX = 0;
+float powerbarSpeed = 3;
+float powerbarAccel = 3;
 
 void setup(){
  size(1080, 720);
@@ -202,25 +204,31 @@ void draw(){
         
         noFill();
         rect(650, 650, 20, -100);        
-        if(powerbarHeight < -70){                    //power bar color changes when above 70%
+        if(powerbarHeight < -80){                    //power bar color changes when above 80%
           fill(255, 0, 0);
         } else{
           fill(245, 151, 0);
         }
-        rect(650, 650, 20, powerbarHeight);
-        powerbarHeight -= 3;
-        
-        if(powerbarHeight < -100){
-        powerbarHeight = 0;
+        rect(650, 650, 20, powerbarHeight); 
+        powerbarHeight += powerbarSpeed;
+        powerbarSpeed += powerbarAccel;
+        if(powerbarHeight < -100 || powerbarHeight > 0){
+          powerbarSpeed *= -1;
+          powerbarAccel *= -1;
         }
+        if(powerbarHeight > 0){
+          powerbarAccel = 0;
+        }
+        
         
         textSize(20);
         text("POWER", 660, 670);
         
         targetX = 540 + ((mouseX - 540) * 3);
-        strokeWeight(2);
-        line(targetX, 400, targetX, 420);
-        line(targetX - 10, 410, targetX + 10, 410);       
+        fill(255, 0, 0); 
+        triangle(540 + ((mouseX - 540)*1.8), 450 + (abs(mouseX - 540)*0.3), 
+                 535 + ((mouseX - 540)*1.4), 480 + ((mouseX - 540)*-0.1),
+                 545 + ((mouseX - 540)*1.4), 480 + ((mouseX - 540)*0.1));
       }     
       
     }
@@ -276,18 +284,18 @@ void mouseReleased(){
     //new ball position
     fill(255);
     stroke(0);
-    ballposX = 540 + ((targetX - 540) * 1.68);
-    if(powerbarHeight > -70){                              //different height factor when power bar below 70
-      ballposY = 270 + (powerbarHeight * 1.97);
+    ballposX = 540 + ((targetX - 540) * 1.68 * (1 + (powerbarHeight * -0.005)));
+    if(powerbarHeight > -80){                              //different height factor when power bar below 80
+      ballposY = 270 + (powerbarHeight * 1.85);
     } else{
-      ballposY = 135 + ( (powerbarHeight + 70) * 4.5);
+      ballposY = 122 + ((powerbarHeight + 80) * 4.5);
     }
     ellipse(ballposX, ballposY, 60, 60);
     
     gameOnOff = false;                                     //reset variables   
     powerbarHeight = 0;
     
-    if(ballposX > 355 & ballposX < 725 & ballposY > 135){
+    if(ballposX > 355 & ballposX < 725 & ballposY > 122){
       textSize(goaltextSize);
       fill(0);
       textAlign(CENTER);
