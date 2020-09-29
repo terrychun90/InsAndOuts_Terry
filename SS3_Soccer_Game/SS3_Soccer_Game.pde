@@ -31,8 +31,8 @@ int goaltextSize = 75;
 int pressenterSize = 40;
 float powerbarHeight = 0;
 float targetX = 0;
-float powerbarSpeed = 3;
-float powerbarAccel = 3;
+float powerbarSpeed = 1.4;
+float powerbarAccel = .13;
 
 void setup(){
  size(1080, 720);
@@ -210,14 +210,13 @@ void draw(){
           fill(245, 151, 0);
         }
         rect(650, 650, 20, powerbarHeight); 
-        powerbarHeight += powerbarSpeed;
+        powerbarHeight -= powerbarSpeed;
         powerbarSpeed += powerbarAccel;
         if(powerbarHeight < -100 || powerbarHeight > 0){
           powerbarSpeed *= -1;
-          powerbarAccel *= -1;
         }
         if(powerbarHeight > 0){
-          powerbarAccel = 0;
+          powerbarSpeed = 1.4;
         }
         
         
