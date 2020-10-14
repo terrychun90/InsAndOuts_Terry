@@ -295,7 +295,6 @@ void returntoTitle(){
 }
 
 
-////game screen after shoot
 void mouseReleased(){
   if(startmenuOnOff == false && gameOnOff == true){
     if(mouseX > 470 && mouseX < 610 && mouseY < 670 && mouseY > 530){      
