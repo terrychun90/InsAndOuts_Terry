@@ -14,10 +14,12 @@ version notes: implemented graphic rework by rearranging title screen code struc
                 
 Gameplay Changes
 -added option to exit to title menu
+
 -goal is now wider and taller, and ball is now smaller
 
 Graphic Changes
 -title menu art reworked and animated
+
 -game screen background art reworked
                 
 Additional Changes
