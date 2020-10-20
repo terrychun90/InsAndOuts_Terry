@@ -43,13 +43,18 @@ Graphic Changes
 */
 
 
-String gameVersion = "3beta 1.0";          //update current game version
+String gameVersion = "3beta 2.1";          //update current game version
 
 boolean titlemenuOnOff = true;
 boolean titlemenuSelect = false;
 int titlemenuPos = 0;
 boolean ballOnOff = false;
-String gameMode = ""; 
+String gameMode = "";
+boolean balloffcheck = false;
+boolean usergoalScore = false;
+boolean opponentgoalScore = false;
+boolean userWin = false;
+boolean opponentWin = false;
 
 int titlestate = 0;
 int titlestateChange = 1;
@@ -68,6 +73,14 @@ float ballposY = 600;
 float newballposX = 0;
 float newballposY = 0;
 float ballsize = 140;
+
+int[] userscore = new int[0];
+int[] opponentscore = new int[0];
+
+int opponentscorechance = 0;
+int userscoreRun = 0;
+int opponentscoreRun = 0;
+
 float targetX = random(305,775);
 float targetY = random(90,260);
 
@@ -110,6 +123,10 @@ void draw(){
   //println("mouseX =", mouseX, "    mouseY =", mouseY);
   //println("titlemenuOnOff = ", titlemenuOnOff, "    titlemenuSelect = ", titlemenuSelect); 
   //println("ballOnOff = ", ballOnOff, "    gameMode = ", gameMode);
+  println("user score =", userscoreRun, "/", userscore.length, "opponent score =", opponentscoreRun, "/", opponentscore.length);
+  println("userWin =", userWin, "opponentWin =", opponentWin);
+  //println(userscore);
+  //println(opponentscore);
   
 
   if(titlemenuOnOff == true && ballOnOff == false){    
@@ -118,33 +135,37 @@ void draw(){
   
   
   if(titlemenuOnOff == false){
-    if(ballOnOff == true){
-      if(gameMode == "matchday"){   
-      ballOn();
-      returntoTitle();
-      } else if(gameMode == "target"){
+    
+    if(gameMode == "matchday"){        
+      if(ballOnOff == true){
+        ballOn();
+        returntoTitle();
+      } else if(balloffcheck == false){
+        ballOffMatch();
+        returntoTitle();
+      } else if(balloffcheck == true){         
+        checkScoreScreen();     
+      }
+      
+    } else if(gameMode == "target"){      
+      if(ballOnOff == true){
         ballOn();
         createTarget();
         returntoTitle();
-      }
-    }else{
-    if(gameMode == "matchday"){
-      ballOffMatch();
-      returntoTitle();
-    } else if(gameMode == "target"){
-      ballOffTarget();  
-      returntoTitle();
-    }
-    
-    if(keyPressed){      
-      if(key == 10){
-        ballOnOff = true;
-        resetVariables();
+      } else{        
+        ballOffTarget();  
+        returntoTitle();
+        
+        if(keyPressed){      
+        if(key == 10){
+          ballOnOff = true;
+          resetVariables();     
+          }
         }
       }
     }
   }
-    
+
 }
 
 
@@ -320,16 +341,85 @@ void ballOffMatch(){
       } else if(ballposX < 299 && ballposY < 91){
         text("NO GOAL!", goaltextX, goaltextY);
       } else{
-        text("GOOOAL!", goaltextX, goaltextY);
+        text("GOAL!", goaltextX, goaltextY);
+        usergoalScore = true;
       }
     } else{
         text("NO GOAL!", goaltextX, goaltextY);
     }
     
+    opponentscorechance = int(random(1, 11));
+    if(opponentscorechance < 7){        //computer's chance of scoring out of 10
+      opponentgoalScore = true;
+    } else{
+      opponentgoalScore = false;
+    }
+    
     
     textSize(30);
-    text("Press ENTER to retry", goaltextX, goaltextY + 100);
+    text("Press ENTER to continue", goaltextX, 560);
   }    
+}
+
+
+void checkScore(){
+  if(usergoalScore){
+    userscore = append(userscore, 1);
+  } else{
+    userscore = append(userscore, 0);
+  }
+  
+  if(opponentgoalScore){
+    opponentscore = append(opponentscore, 1);
+  } else{
+    opponentscore = append(opponentscore, 0);
+  }
+  
+
+  userscoreRun += userscore[userscore.length - 1];
+  opponentscoreRun += opponentscore[opponentscore.length - 1];
+      
+  if(userscore.length >= 5){
+    if(userscoreRun > opponentscoreRun){
+      userWin = true;
+    } else if(opponentscoreRun > userscoreRun){
+      opponentWin = true;
+    }
+  } else{
+    if(userscoreRun > ((5 - opponentscore.length) + opponentscoreRun)){
+      userWin = true;
+    } else if(opponentscoreRun > ((5 - userscore.length) + userscoreRun)){
+      opponentWin = true;
+    }
+  }
+
+}
+  
+
+void checkScoreScreen(){
+  image(gamescreen, width/2, height/2);
+  textSize(50);
+  if(opponentgoalScore){
+    text("AND OPPONENT HAS SCORED!", width/2, goaltextY);
+  } else{
+    text("AND OPPONENT HAS MISSED!", width/2, goaltextY);
+  }
+  
+  textSize(80);
+  if(userWin){
+    text("W I N", goaltextX, goaltextY + 100);
+  } else if(opponentWin){
+    text("L O S E!", goaltextX, goaltextY + 100);
+  }
+  
+  textSize(30);
+  if(userWin || opponentWin){
+    text("Press ENTER to start a new game", goaltextX, 560);
+  } else{
+    text("Press ENTER to continue", goaltextX, 560);
+  }
+  
+  returntoTitle();
 }
 
 
@@ -396,6 +486,7 @@ void returntoTitle(){
       titlemenuOnOff = true;
       ballOnOff = false;
       resetVariables();
+      newmatch();
     }
   }  
 }
@@ -422,22 +513,6 @@ void mouseReleased(){
   }
   
 }
-
-
-void resetVariables(){
-  powerbarHeight = 0;
-  powerbarSpeed = 1.4;
-  ballposX = 540;
-  ballposY = 600;
-  newballposX = 0;
-  newballposY = 0;
-  ballsize = 140;
-  titlemenuSelect = false;
-  titlemenuPos = 0;
-  targetX = random(305,775);
-  targetY = random(90,260);
-}
-
 
 void keyPressed(){
   if(titlemenuOnOff && titlemenuSelect){
@@ -472,4 +547,47 @@ void keyPressed(){
       }
     
   }
+  
+  
+  if(titlemenuOnOff == false && ballOnOff == false && gameMode == "matchday" && balloffcheck == false){
+    if(key == 10){
+      checkScore();
+      balloffcheck = true;
+    }
+  } else if(balloffcheck){
+    if(key == 10){
+      if(userWin || opponentWin){
+        newmatch();
+      }
+      ballOnOff = true;
+      resetVariables();
+    }
+  }
+      
+}
+
+
+void resetVariables(){
+  powerbarHeight = 0;
+  powerbarSpeed = 1.4;
+  ballposX = 540;
+  ballposY = 600;
+  newballposX = 0;
+  newballposY = 0;
+  ballsize = 140;
+  titlemenuSelect = false;
+  titlemenuPos = 0;
+  targetX = random(305,775);
+  targetY = random(90,260);
+  usergoalScore = false;
+  balloffcheck = false;
+}
+
+void newmatch(){
+  userscoreRun = 0;
+  opponentscoreRun = 0;
+  userWin = false;
+  opponentWin = false;
+  userscore = new int[0];
+  opponentscore = new int[0];
 }
