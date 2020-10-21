@@ -43,7 +43,7 @@ Graphic Changes
 */
 
 
-String gameVersion = "3beta 2.1";          //update current game version
+String gameVersion = "3beta 2.3";          //update current game version
 
 boolean titlemenuOnOff = true;
 boolean titlemenuSelect = false;
@@ -52,6 +52,7 @@ boolean ballOnOff = false;
 String gameMode = "";
 boolean balloffcheck = false;
 boolean usergoalScore = false;
+boolean usergoalMiss = false;
 boolean opponentgoalScore = false;
 boolean userWin = false;
 boolean opponentWin = false;
@@ -67,6 +68,9 @@ PImage titlebutton;
 PImage titlebuttonGlow;
 PImage target;
 PImage targetHit;
+PImage matchWin;
+PImage matchLose;
+PImage scoreboard;
 
 float ballposX = 540;
 float ballposY = 600;
@@ -80,6 +84,9 @@ int[] opponentscore = new int[0];
 int opponentscorechance = 0;
 int userscoreRun = 0;
 int opponentscoreRun = 0;
+
+int userscoreboard = 0; 
+int opponentscoreboard = 0;
 
 float targetX = random(305,775);
 float targetY = random(90,260);
@@ -113,6 +120,9 @@ void setup(){
  gamemode[2] = loadImage("Game modes_target glow.png");
  target = loadImage("target.png");
  targetHit = loadImage("target hit.png");
+ matchWin = loadImage("match win.png");
+ matchLose = loadImage("match lose.png");
+ scoreboard = loadImage("scoreboard.png");
  
 }
 
@@ -122,9 +132,9 @@ void draw(){
   ////debug toolkit////
   //println("mouseX =", mouseX, "    mouseY =", mouseY);
   //println("titlemenuOnOff = ", titlemenuOnOff, "    titlemenuSelect = ", titlemenuSelect); 
-  //println("ballOnOff = ", ballOnOff, "    gameMode = ", gameMode);
+  println("ballOnOff = ", ballOnOff, "    gameMode = ", gameMode);
   println("user score =", userscoreRun, "/", userscore.length, "opponent score =", opponentscoreRun, "/", opponentscore.length);
-  println("userWin =", userWin, "opponentWin =", opponentWin);
+  //println("userWin =", userWin, "opponentWin =", opponentWin);
   //println(userscore);
   //println(opponentscore);
   
@@ -140,11 +150,14 @@ void draw(){
       if(ballOnOff == true){
         ballOn();
         returntoTitle();
+        scoreboard();
       } else if(balloffcheck == false){
         ballOffMatch();
         returntoTitle();
+        scoreboard();
       } else if(balloffcheck == true){         
-        checkScoreScreen();     
+        checkscoreScreen();
+        scoreboard();
       }
       
     } else if(gameMode == "target"){      
@@ -152,6 +165,7 @@ void draw(){
         ballOn();
         createTarget();
         returntoTitle();
+        instructionTarget();
       } else{        
         ballOffTarget();  
         returntoTitle();
@@ -238,16 +252,6 @@ void ballOn(){
   imageMode(CENTER);
 
   image(gamescreen, width/2, height/2);
-
-  //instruction text
-  fill(0, 150);
-  rectMode(CENTER);
-  noStroke();
-  rect(540, 40, 900, 40);
-  textSize(30);
-  fill(255);
-  textAlign(CENTER);
-  text("Click on the ball and hold down the mouse to aim and shoot", 540, 50);
    
   noStroke();                    //ball shadow
   fill(50);
@@ -338,14 +342,17 @@ void ballOffMatch(){
     if(ballposX > 295 && ballposX < 785 && ballposY > 86){        
       if(ballposX > 781 && ballposY < 91){
         text("NO GOAL!", goaltextX, goaltextY);
+        usergoalMiss = true;
       } else if(ballposX < 299 && ballposY < 91){
         text("NO GOAL!", goaltextX, goaltextY);
+        usergoalMiss = true;
       } else{
         text("GOAL!", goaltextX, goaltextY);
         usergoalScore = true;
       }
     } else{
         text("NO GOAL!", goaltextX, goaltextY);
+        usergoalMiss = true;
     }
     
     opponentscorechance = int(random(1, 11));
@@ -355,14 +362,26 @@ void ballOffMatch(){
       opponentgoalScore = false;
     }
     
-    
     textSize(30);
-    text("Press ENTER to continue", goaltextX, 560);
-  }    
+    if(usergoalScore && userscore.length < 5){
+      if(userscoreRun + 1 > ((5 - opponentscore.length) + opponentscoreRun)){        
+        userWin = true;
+        image(matchWin, width/2, height/2);
+        text("Press ENTER to start a new game", goaltextX, goaltextY + 100);
+        fill(0, 255, 0);
+        ellipse((270 + (userscore.length)*50), 50, 20, 20);
+      } else{           
+        text("Press ENTER to continue", goaltextX, goaltextY + 100);    
+      }
+    } else{
+      text("Press ENTER to continue", goaltextX, goaltextY + 100);
+    }         
+  }  
+  
 }
 
 
-void checkScore(){
+void checkscore(){
   if(usergoalScore){
     userscore = append(userscore, 1);
   } else{
@@ -396,30 +415,138 @@ void checkScore(){
 }
   
 
-void checkScoreScreen(){
+void checkscoreScreen(){
   image(gamescreen, width/2, height/2);
+  fill(255);
   textSize(50);
   if(opponentgoalScore){
-    text("AND OPPONENT HAS SCORED!", width/2, goaltextY);
+    text("AND OPPONENT SCORED!", width/2, goaltextY);
   } else{
-    text("AND OPPONENT HAS MISSED!", width/2, goaltextY);
+    text("AND OPPONENT MISSED!", width/2, goaltextY);
   }
   
   textSize(80);
   if(userWin){
-    text("W I N", goaltextX, goaltextY + 100);
+    image(matchWin, width/2, height/2);
   } else if(opponentWin){
-    text("L O S E!", goaltextX, goaltextY + 100);
+    image(matchLose, width/2, height/2);
   }
   
   textSize(30);
   if(userWin || opponentWin){
-    text("Press ENTER to start a new game", goaltextX, 560);
+    text("Press ENTER to start a new game", goaltextX, goaltextY + 100);
   } else{
-    text("Press ENTER to continue", goaltextX, 560);
+    text("Press ENTER to continue", goaltextX, goaltextY + 100);
   }
   
   returntoTitle();
+}
+
+
+void scoreboard(){
+  image(scoreboard, width/2, height/2); 
+  textSize(30);
+  ellipseMode(CENTER);
+
+  if(balloffcheck == false){
+    if(userscore.length < 5){
+      if(usergoalScore){
+        fill(0, 255, 0);
+        ellipse((270 + (userscore.length)*50), 50, 20, 20);
+        fill(255);
+        text(userscoreRun + 1, 518, 50);
+      } else if(usergoalMiss){
+        fill(255, 0, 0);
+        ellipse((270 + (userscore.length)*50), 50, 20, 20);
+        fill(255);
+        text(userscoreRun, 518, 50);
+      } else{
+        fill(255);
+        text(userscoreRun, 518, 50);
+      }
+    } else{
+      if(usergoalScore){
+        fill(0, 255, 0);
+        ellipse(270, 50, 20, 20);
+        fill(255);
+        text(userscoreRun + 1, 518, 50);
+      } else if(usergoalMiss){
+        fill(255, 0, 0);
+        ellipse(270, 50, 20, 20);
+        fill(255);
+        text(userscoreRun, 518, 50);
+      } else{
+        fill(255);
+        text(userscoreRun, 518, 50);
+      }
+    }
+  } else{
+    fill(255);
+    text(userscoreRun, 518, 50);
+  }
+  
+  if(userscore.length > 0 && userscore.length < 5){        
+      for(int i = 0; i < userscore.length; i++){
+        if(userscore[i] == 1){
+          fill(0, 255, 0);
+        } else{
+          fill(255, 0, 0);
+        }
+      ellipse((270 + i*50), 50, 20, 20);
+      }
+      
+      for(int i = 0; i < opponentscore.length; i++){
+        if(opponentscore[i] == 1){
+          fill(0, 255, 0);
+        } else{
+          fill(255, 0, 0);
+        }
+      ellipse((610 + i*50), 50, 20, 20);
+      }
+      
+    } else if(userscore.length == 5){
+        if(ballOnOff == false && balloffcheck){
+          for(int i = 0; i < userscore.length; i++){
+            if(userscore[i] == 1){
+              fill(0, 255, 0);
+            } else{
+              fill(255, 0, 0);
+            }
+          ellipse((270 + i*50), 50, 20, 20);
+          }
+          
+          for(int i = 0; i < opponentscore.length; i++){
+            if(opponentscore[i] == 1){
+              fill(0, 255, 0);
+            } else{
+              fill(255, 0, 0);
+            }
+          ellipse((610 + i*50), 50, 20, 20);
+          }
+        }
+        
+      } else if(userscore.length > 5){
+      if(balloffcheck){
+        if(userscore[userscore.length - 1] == 1){
+          fill(0, 255, 0);
+        } else{
+          fill(255, 0, 0);
+        }
+        ellipse(270, 50, 20, 20);
+        if(opponentscore[opponentscore.length - 1] == 1){
+          fill(0, 255, 0);
+        } else{
+          fill(255, 0, 0);
+        }
+        ellipse(610, 50, 20, 20);
+      }
+    }
+  
+  
+  
+  fill(255);
+  text(opponentscoreRun, 562, 50);
+  
 }
 
 
@@ -492,6 +619,18 @@ void returntoTitle(){
 }
 
 
+void instructionTarget(){
+  fill(0, 150);
+  rectMode(CENTER);
+  noStroke();
+  rect(540, 40, 900, 40);
+  textSize(30);
+  fill(255);
+  textAlign(CENTER);
+  text("Click on the ball and hold down the mouse to aim and shoot", 540, 50);
+}
+
+
 void mouseReleased(){
   
   if(titlemenuOnOff && titlemenuSelect){
@@ -551,8 +690,14 @@ void keyPressed(){
   
   if(titlemenuOnOff == false && ballOnOff == false && gameMode == "matchday" && balloffcheck == false){
     if(key == 10){
-      checkScore();
-      balloffcheck = true;
+      if(userWin){
+        ballOnOff = true;
+        resetVariables();
+        newmatch();
+      } else{
+        checkscore();
+        balloffcheck = true;
+      }
     }
   } else if(balloffcheck){
     if(key == 10){
@@ -580,6 +725,7 @@ void resetVariables(){
   targetX = random(305,775);
   targetY = random(90,260);
   usergoalScore = false;
+  usergoalMiss = false;
   balloffcheck = false;
 }
 
