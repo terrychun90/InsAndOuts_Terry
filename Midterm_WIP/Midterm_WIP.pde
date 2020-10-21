@@ -43,7 +43,7 @@ Graphic Changes
 */
 
 
-String gameVersion = "3beta 2.3";          //update current game version
+String gameVersion = "3beta 2.4";          //update current game version
 
 boolean titlemenuOnOff = true;
 boolean titlemenuSelect = false;
@@ -132,8 +132,8 @@ void draw(){
   ////debug toolkit////
   //println("mouseX =", mouseX, "    mouseY =", mouseY);
   //println("titlemenuOnOff = ", titlemenuOnOff, "    titlemenuSelect = ", titlemenuSelect); 
-  println("ballOnOff = ", ballOnOff, "    gameMode = ", gameMode);
-  println("user score =", userscoreRun, "/", userscore.length, "opponent score =", opponentscoreRun, "/", opponentscore.length);
+  //println("ballOnOff = ", ballOnOff, "    gameMode = ", gameMode);
+  //println("user score =", userscoreRun, "/", userscore.length, "opponent score =", opponentscoreRun, "/", opponentscore.length);
   //println("userWin =", userWin, "opponentWin =", opponentWin);
   //println(userscore);
   //println(opponentscore);
@@ -354,6 +354,7 @@ void ballOffMatch(){
         text("NO GOAL!", goaltextX, goaltextY);
         usergoalMiss = true;
     }
+  }
     
     opponentscorechance = int(random(1, 11));
     if(opponentscorechance < 7){        //computer's chance of scoring out of 10
@@ -363,20 +364,30 @@ void ballOffMatch(){
     }
     
     textSize(30);
-    if(usergoalScore && userscore.length < 5){
-      if(userscoreRun + 1 > ((5 - opponentscore.length) + opponentscoreRun)){        
-        userWin = true;
-        image(matchWin, width/2, height/2);
-        text("Press ENTER to start a new game", goaltextX, goaltextY + 100);
-        fill(0, 255, 0);
-        ellipse((270 + (userscore.length)*50), 50, 20, 20);
-      } else{           
-        text("Press ENTER to continue", goaltextX, goaltextY + 100);    
-      }
-    } else{
-      text("Press ENTER to continue", goaltextX, goaltextY + 100);
-    }         
-  }  
+    if(userscore.length < 5){
+      if(usergoalScore){
+        if(userscoreRun + 1 > ((5 - opponentscore.length) + opponentscoreRun)){        
+          userWin = true;
+          image(matchWin, width/2, height/2);
+          text("Press ENTER to start a new game", goaltextX, goaltextY + 100);
+          fill(0, 255, 0);
+          ellipse((270 + (userscore.length)*50), 50, 20, 20);
+        } else{           
+          text("Press ENTER to continue", goaltextX, goaltextY + 100);    
+        }
+      } else if(usergoalMiss){
+        if(opponentscoreRun + 1 > ((5 - userscore.length) + userscoreRun)){        
+          opponentWin = true;
+          image(matchLose, width/2, height/2);
+          text("Press ENTER to start a new game", goaltextX, goaltextY + 100);
+        } else{           
+          text("Press ENTER to continue", goaltextX, goaltextY + 100);    
+        }
+      } else{
+        text("Press ENTER to continue", goaltextX, goaltextY + 100);
+      }  
+    }
+  
   
 }
 
@@ -691,6 +702,10 @@ void keyPressed(){
   if(titlemenuOnOff == false && ballOnOff == false && gameMode == "matchday" && balloffcheck == false){
     if(key == 10){
       if(userWin){
+        ballOnOff = true;
+        resetVariables();
+        newmatch();
+      } else if(opponentWin){
         ballOnOff = true;
         resetVariables();
         newmatch();
