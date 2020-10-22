@@ -8,6 +8,13 @@ Ball will either show "goal" or "no goal" depending on the ball shot.
 
 //////////////////////////////////////////////////////////
 
+version 3.1
+
+Gameplay Changes
+-goalkeeper now has random X offset with random float variable gkrandomXfactor
+
+//////////////////////////////////////////////////////////
+
 version 3.0
 version notes: now game allows two different modes - "match day" and "target practice"
                 "match day" - play against computer that scores at 7/10 probability
@@ -110,6 +117,7 @@ int opponentscoreRun = 0;
 int gkpos = 0;
 int opponentgoalpos = 0;
 int opponentmisspos = 0;
+float gkrandomXfactor = 0;
 
 int userscoreboard = 0; 
 int opponentscoreboard = 0;
@@ -386,7 +394,7 @@ void ballOffMatch(){
   
   //ball stops at net, ball will either be goal (usergoalScore = true) or no goal (usergoalMiss = true)  
   } else{
-    image(gk[gkpos], width/2, height/2);
+    image(gk[gkpos], (width/2) + gkrandomXfactor, height/2);
     
     image(soccerball[2], ballposX, ballposY, ballsize, ballsize);
     textSize(goaltextSize);
@@ -404,14 +412,14 @@ void ballOffMatch(){
         //goalkeeper collision check 
         if(gkpos == 0){
           if(
-          dist(ballposX, ballposY, 337.5, 212) < (12.5 + 34.8) ||
-          dist(ballposX, ballposY, 393.3, 222.4) < (12.5 + 25.8) ||
-          dist(ballposX, ballposY, 415.4, 240.2) < (12.5 + 19.9) ||
-          dist(ballposX, ballposY, 455.4, 252.6) < (12.5 + 23.6) ||
-          dist(ballposX, ballposY, 489.7, 258.7) < (12.5 + 26.8) ||
-          dist(ballposX, ballposY, 514.8, 257.6) < (12.5 + 19.9) ||
-          dist(ballposX, ballposY, 536.2, 259.7) < (12.5 + 12.3) ||
-          dist(ballposX, ballposY, 554.8, 262) < (12.5 + 10.8) ){
+          dist(ballposX, ballposY, 337.5 + gkrandomXfactor, 212) < (12.5 + 34.8) ||
+          dist(ballposX, ballposY, 393.3 + gkrandomXfactor, 222.4) < (12.5 + 25.8) ||
+          dist(ballposX, ballposY, 415.4 + gkrandomXfactor, 240.2) < (12.5 + 19.9) ||
+          dist(ballposX, ballposY, 455.4 + gkrandomXfactor, 252.6) < (12.5 + 23.6) ||
+          dist(ballposX, ballposY, 489.7 + gkrandomXfactor, 258.7) < (12.5 + 26.8) ||
+          dist(ballposX, ballposY, 514.8 + gkrandomXfactor, 257.6) < (12.5 + 19.9) ||
+          dist(ballposX, ballposY, 536.2 + gkrandomXfactor, 259.7) < (12.5 + 12.3) ||
+          dist(ballposX, ballposY, 554.8 + gkrandomXfactor, 262) < (12.5 + 10.8) ){
             text("NO GOAL!", goaltextX, goaltextY);
             usergoalMiss = true;
         } else{
@@ -421,15 +429,15 @@ void ballOffMatch(){
         
         } else if(gkpos == 1){
           if(
-          dist(ballposX, ballposY, 359.2, 101.6) < (12.5 + 20.9) ||
-          dist(ballposX, ballposY, 371.9, 128.7) < (12.5 + 26) ||
-          dist(ballposX, ballposY, 387.8, 143) < (12.5 + 24.5) ||
-          dist(ballposX, ballposY, 402.9, 169.4) < (12.5 + 18.4) ||
-          dist(ballposX, ballposY, 422.3, 189.3) < (12.5 + 18.9) ||
-          dist(ballposX, ballposY, 451, 210.6) < (12.5 + 24.7) ||
-          dist(ballposX, ballposY, 478.4, 220) < (12.5 + 21.5) ||
-          dist(ballposX, ballposY, 503.4, 228.3) < (12.5 + 17.9) ||
-          dist(ballposX, ballposY, 531.8, 243.7) < (12.5 + 19) ){
+          dist(ballposX, ballposY, 359.2 + gkrandomXfactor, 101.6) < (12.5 + 20.9) ||
+          dist(ballposX, ballposY, 371.9 + gkrandomXfactor, 128.7) < (12.5 + 26) ||
+          dist(ballposX, ballposY, 387.8 + gkrandomXfactor, 143) < (12.5 + 24.5) ||
+          dist(ballposX, ballposY, 402.9 + gkrandomXfactor, 169.4) < (12.5 + 18.4) ||
+          dist(ballposX, ballposY, 422.3 + gkrandomXfactor, 189.3) < (12.5 + 18.9) ||
+          dist(ballposX, ballposY, 451 + gkrandomXfactor, 210.6) < (12.5 + 24.7) ||
+          dist(ballposX, ballposY, 478.4 + gkrandomXfactor, 220) < (12.5 + 21.5) ||
+          dist(ballposX, ballposY, 503.4 + gkrandomXfactor, 228.3) < (12.5 + 17.9) ||
+          dist(ballposX, ballposY, 531.8 + gkrandomXfactor, 243.7) < (12.5 + 19) ){
             text("NO GOAL!", goaltextX, goaltextY);
             usergoalMiss = true;
         } else{
@@ -439,14 +447,14 @@ void ballOffMatch(){
           
         } else if(gkpos == 2){
           if(
-          dist(ballposX, ballposY, 502.7, 82.7) < (12.5 + 9.5) ||
-          dist(ballposX, ballposY, 488.7, 101.7) < (12.5 + 17.3) ||
-          dist(ballposX, ballposY, 489.7, 123) < (12.5 + 18.4) ||
-          dist(ballposX, ballposY, 509.2, 153.7) < (12.5 + 30) ||
-          dist(ballposX, ballposY, 522.2, 190.8) < (12.5 + 24.3) ||
-          dist(ballposX, ballposY, 543.9, 208.4) < (12.5 + 25.3) ||
-          dist(ballposX, ballposY, 583.6, 221.3) < (12.5 + 17.6) ||
-          dist(ballposX, ballposY, 605.5, 236) < (12.5 + 9.6) ){
+          dist(ballposX, ballposY, 502.7 + gkrandomXfactor, 82.7) < (12.5 + 9.5) ||
+          dist(ballposX, ballposY, 488.7 + gkrandomXfactor, 101.7) < (12.5 + 17.3) ||
+          dist(ballposX, ballposY, 489.7 + gkrandomXfactor, 123) < (12.5 + 18.4) ||
+          dist(ballposX, ballposY, 509.2 + gkrandomXfactor, 153.7) < (12.5 + 30) ||
+          dist(ballposX, ballposY, 522.2 + gkrandomXfactor, 190.8) < (12.5 + 24.3) ||
+          dist(ballposX, ballposY, 543.9 + gkrandomXfactor, 208.4) < (12.5 + 25.3) ||
+          dist(ballposX, ballposY, 583.6 + gkrandomXfactor, 221.3) < (12.5 + 17.6) ||
+          dist(ballposX, ballposY, 605.5 + gkrandomXfactor, 236) < (12.5 + 9.6) ){
             text("NO GOAL!", goaltextX, goaltextY);
             usergoalMiss = true;
         } else{
@@ -456,11 +464,11 @@ void ballOffMatch(){
         
         } else if(gkpos == 3){
           if(
-          dist(ballposX, ballposY, 540, 190.8) < (12.5 + 14.2) ||
-          dist(ballposX, ballposY, 545.1, 224.5) < (12.5 + 26.9) ||
-          dist(ballposX, ballposY, 558.2, 262) < (12.5 + 26.6) ||
-          dist(ballposX, ballposY, 514.5, 257.5) < (12.5 + 26.6) ||
-          dist(ballposX, ballposY, 488.1, 277.4) < (12.5 + 11.5) ){
+          dist(ballposX, ballposY, 540 + gkrandomXfactor, 190.8) < (12.5 + 14.2) ||
+          dist(ballposX, ballposY, 545.1 + gkrandomXfactor, 224.5) < (12.5 + 26.9) ||
+          dist(ballposX, ballposY, 558.2 + gkrandomXfactor, 262) < (12.5 + 26.6) ||
+          dist(ballposX, ballposY, 514.5 + gkrandomXfactor, 257.5) < (12.5 + 26.6) ||
+          dist(ballposX, ballposY, 488.1 + gkrandomXfactor, 277.4) < (12.5 + 11.5) ){
             text("NO GOAL!", goaltextX, goaltextY);
             usergoalMiss = true;
         } else{
@@ -470,14 +478,14 @@ void ballOffMatch(){
         
         } else if(gkpos == 4){
           if(
-          dist(ballposX, ballposY, 577.6, 82.7) < (12.5 + 9.5) ||
-          dist(ballposX, ballposY, 591.6, 101.7) < (12.5 + 17.3) ||
-          dist(ballposX, ballposY, 590.6, 123) < (12.5 + 18.4) ||
-          dist(ballposX, ballposY, 571.1, 153.7) < (12.5 + 30) ||
-          dist(ballposX, ballposY, 558.1, 190.8) < (12.5 + 24.3) ||
-          dist(ballposX, ballposY, 536.4, 208.4) < (12.5 + 25.3) ||
-          dist(ballposX, ballposY, 496.7, 221.3) < (12.5 + 17.6) ||
-          dist(ballposX, ballposY, 474.8, 236) < (12.5 + 9.6) ){
+          dist(ballposX, ballposY, 577.6 + gkrandomXfactor, 82.7) < (12.5 + 9.5) ||
+          dist(ballposX, ballposY, 591.6 + gkrandomXfactor, 101.7) < (12.5 + 17.3) ||
+          dist(ballposX, ballposY, 590.6 + gkrandomXfactor, 123) < (12.5 + 18.4) ||
+          dist(ballposX, ballposY, 571.1 + gkrandomXfactor, 153.7) < (12.5 + 30) ||
+          dist(ballposX, ballposY, 558.1 + gkrandomXfactor, 190.8) < (12.5 + 24.3) ||
+          dist(ballposX, ballposY, 536.4 + gkrandomXfactor, 208.4) < (12.5 + 25.3) ||
+          dist(ballposX, ballposY, 496.7 + gkrandomXfactor, 221.3) < (12.5 + 17.6) ||
+          dist(ballposX, ballposY, 474.8 + gkrandomXfactor, 236) < (12.5 + 9.6) ){
             text("NO GOAL!", goaltextX, goaltextY);
             usergoalMiss = true;
         } else{
@@ -487,15 +495,15 @@ void ballOffMatch(){
         
         } else if(gkpos == 5){
           if(
-          dist(ballposX, ballposY, 722.3, 101.6) < (12.5 + 20.9) ||
-          dist(ballposX, ballposY, 709.6, 128.7) < (12.5 + 26) ||
-          dist(ballposX, ballposY, 693.7, 143) < (12.5 + 24.5) ||
-          dist(ballposX, ballposY, 678.6, 169.4) < (12.5 + 18.4) ||
-          dist(ballposX, ballposY, 659.2, 189.3) < (12.5 + 18.9) ||
-          dist(ballposX, ballposY, 630.5, 210.6) < (12.5 + 24.7) ||
-          dist(ballposX, ballposY, 603.1, 220) < (12.5 + 21.5) ||
-          dist(ballposX, ballposY, 578, 228.3) < (12.5 + 17.9) ||
-          dist(ballposX, ballposY, 549.7, 243.7) < (12.5 + 19) ){
+          dist(ballposX, ballposY, 722.3 + gkrandomXfactor, 101.6) < (12.5 + 20.9) ||
+          dist(ballposX, ballposY, 709.6 + gkrandomXfactor, 128.7) < (12.5 + 26) ||
+          dist(ballposX, ballposY, 693.7 + gkrandomXfactor, 143) < (12.5 + 24.5) ||
+          dist(ballposX, ballposY, 678.6 + gkrandomXfactor, 169.4) < (12.5 + 18.4) ||
+          dist(ballposX, ballposY, 659.2 + gkrandomXfactor, 189.3) < (12.5 + 18.9) ||
+          dist(ballposX, ballposY, 630.5 + gkrandomXfactor, 210.6) < (12.5 + 24.7) ||
+          dist(ballposX, ballposY, 603.1 + gkrandomXfactor, 220) < (12.5 + 21.5) ||
+          dist(ballposX, ballposY, 578 + gkrandomXfactor, 228.3) < (12.5 + 17.9) ||
+          dist(ballposX, ballposY, 549.7 + gkrandomXfactor, 243.7) < (12.5 + 19) ){
             text("NO GOAL!", goaltextX, goaltextY);
             usergoalMiss = true;
         } else{
@@ -505,14 +513,14 @@ void ballOffMatch(){
         
         } else if(gkpos == 6){
           if(
-          dist(ballposX, ballposY, 714.6, 212) < (12.5 + 34.8) ||
-          dist(ballposX, ballposY, 711.6, 222.4) < (12.5 + 25.8) ||
-          dist(ballposX, ballposY, 683.6, 240.2) < (12.5 + 19.9) ||
-          dist(ballposX, ballposY, 647.2, 252.6) < (12.5 + 23.6) ||
-          dist(ballposX, ballposY, 616.2, 258.7) < (12.5 + 26.8) ||
-          dist(ballposX, ballposY, 584.2, 257.6) < (12.5 + 19.9) ||
-          dist(ballposX, ballposY, 555.7, 259.7) < (12.5 + 12.3) ||
-          dist(ballposX, ballposY, 535.1, 262) < (12.5 + 10.8) ){
+          dist(ballposX, ballposY, 714.6 + gkrandomXfactor, 212) < (12.5 + 34.8) ||
+          dist(ballposX, ballposY, 711.6 + gkrandomXfactor, 222.4) < (12.5 + 25.8) ||
+          dist(ballposX, ballposY, 683.6 + gkrandomXfactor, 240.2) < (12.5 + 19.9) ||
+          dist(ballposX, ballposY, 647.2 + gkrandomXfactor, 252.6) < (12.5 + 23.6) ||
+          dist(ballposX, ballposY, 616.2 + gkrandomXfactor, 258.7) < (12.5 + 26.8) ||
+          dist(ballposX, ballposY, 584.2 + gkrandomXfactor, 257.6) < (12.5 + 19.9) ||
+          dist(ballposX, ballposY, 555.7 + gkrandomXfactor, 259.7) < (12.5 + 12.3) ||
+          dist(ballposX, ballposY, 535.1 + gkrandomXfactor, 262) < (12.5 + 10.8) ){
             text("NO GOAL!", goaltextX, goaltextY);
             usergoalMiss = true;
         } else{
@@ -855,6 +863,7 @@ void mouseReleased(){
       ballOnOff = false;
       if(gameMode == "matchday"){
         gkpos = int(random(0,7));
+        gkrandomXfactor = random(-50, 50);
         opponentscorechance = int(random(1, 11));
       }
     }
