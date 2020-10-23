@@ -69,7 +69,7 @@ Graphic Changes
 */
 
 
-String gameVersion = "3.0";          //update current game version
+String gameVersion = "3.1";          //update current game version
 
 boolean titlemenuOnOff = true;
 boolean titlemenuSelect = false;
