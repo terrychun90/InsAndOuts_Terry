@@ -4,7 +4,8 @@
 
 Simulates penalty shots by having user aim with mouse
 and shoot with left mouse click.
-Ball will either show "goal" or "no goal" depending on the ball shot.
+Player can play against computer in a simualted penalty shootout game,
+or practice against randomly generated targets for accuracy.
 
 //////////////////////////////////////////////////////////
 
