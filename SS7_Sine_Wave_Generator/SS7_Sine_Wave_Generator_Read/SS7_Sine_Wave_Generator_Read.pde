@@ -23,6 +23,10 @@ float dx = TWO_PI / 100;
 float sineFreq = 0;
 float sineOffX = 540;
 
+float knobX = 0;
+float knobY = 0;
+float knobAng = 0;
+
 void setup() {
   
   size(1080, 720);
@@ -39,6 +43,7 @@ void draw() {
   background(0);
   imageMode(CENTER);
   ellipseMode(CENTER);
+  textAlign(CENTER);
 
   if (myPort.available() > 0) {
     val = myPort.read();
@@ -61,10 +66,10 @@ void draw() {
   if(oscOnOff){
     //100 ellipses per wave cycle are created from value theta
     for (int i = 0; i <= (100 * 400 / period); i++) {
-      //to the left of the midpoint
+      //to the right of the midpoint
       float y = map(sin(theta), -1, 1, 100, 420);     
       ellipse((i * period / 100) + sineOffX, y, 5, 5);
-      //to the right of the midpoint
+      //to the left of the midpoint
       float yprime = map(cos(theta + PI/2), -1, 1, 100, 420);
       ellipse((-i * period / 100) + sineOffX, yprime, 5, 5);
       theta += dx;    
@@ -81,8 +86,8 @@ void draw() {
     //frequency text indicator
     fill(0, 255, 0);
     textSize(30);
-    text("f=", 790, 500);
-    text(sineFreq, 820, 500);
+    text("f=        Hz", 875, 500);
+    text(int(sineFreq), 875, 500);
     
     //powerbutton on
     ellipse(700, 600, 100, 100);
@@ -97,6 +102,22 @@ void draw() {
     //stop the sine osc
     sine.stop();
   }
+  
+  //frequency knob
+  stroke(0);
+  strokeWeight(3);
+  fill(150);
+  ellipse(400, 600, 100, 100);
+  knobAng = map(float(val), 0, 255, 5*PI/4, -PI/4);
+  knobX = 400 - cos(knobAng) * 50;
+  knobY = 600 - sin(knobAng) * 50;
+  line(400, 600, knobX, knobY);
+  fill(255);
+  textSize(15);
+  text("120", 340, 660);
+  text("1000", 460, 660);
+  text("558", 400, 540);
+  
     
 }
 
