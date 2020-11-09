@@ -18,7 +18,6 @@ boolean oscOnOff = false;
 
 int valConvert = 0;
 float period = 0;
-float periodChange = 20;
 float dx = TWO_PI / 100; 
 float sineFreq = 0;
 float sineOffX = 540;
