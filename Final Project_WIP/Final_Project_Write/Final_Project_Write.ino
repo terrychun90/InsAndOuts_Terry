@@ -1,6 +1,16 @@
+/*
+"Arduino MIDI Trumpet" by Terry Chun
+
+Arduino reads 3 values from each key valve to determine if note is being played,
+and if so, which note, based on the combination of button pressed.
+
+Arduino then sends the integer value of the note being played to Processing.
+*/
+
 int valve1 = 0;
 int valve2 = 0;
 int valve3 = 0;
+
 int note = 0;
 int note_old = 0;
 
@@ -14,10 +24,11 @@ void setup() {
 }
 
 void loop() {
-  valve1 = analogRead(A1);
-  valve2 = analogRead(A2);
-  valve3 = analogRead(A3);
+  valve1 = analogRead(A1);      //valve 1 read
+  valve2 = analogRead(A2);      //valve 2 read
+  valve3 = analogRead(A3);      //valve 3 read
 
+  //use to read the 3 analog pin values simultaneously, first uncomment all Serial.write(note)
   /*
   Serial.print("valve 1 = ");
   Serial.print(valve1);
@@ -26,8 +37,13 @@ void loop() {
   Serial.print("   valve 3 = ");
   Serial.println(valve3);
   */
+
+  //retrigger value,
+  //the amount of time before reading the next note
+  //decrease this value for more sensitive note trigger
+  delay(60);
+
   
-  delay(20);
   //C
   if(valve1 > 1000){
     note = 60;
@@ -126,7 +142,7 @@ void loop() {
   }
       
   //neutral
-  if(valve1 < 10){
+  if(valve1 < 40){
     note = 1;
     if(note != note_old){
       Serial.write(note);
